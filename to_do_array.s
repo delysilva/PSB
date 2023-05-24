@@ -1,31 +1,54 @@
 section .data
 
-array db 2,1,5,6,7
+array db 2, 1, 5, 6, 7, 0
 
 var db 2
 
+nfound db "O valor não está no array", 10
+
+yfound db "O valor está no array", 10
+
 section .text
 
-strlen:     
-    mov  rax, 0    
-    
-    .loop:        
-        cmp byte [rdi+rax], 0
-        je .notfound
-        cmp byte [rdi+rax],var
+search:
+    mov rax, 0
+    mov rcx, 0 ; contador de elementos
+    .loop:
+        
+        cmp byte [rdi+rax], 4 ; compara com o valor procurado nesse caso valor = 4
         je .found
+        cmp byte [rdi+rax], 0 ; verifica se chegou ao fim do array
+        je .notfound
         inc rax
-        jmp .loop    
-    .notfound:
+        inc rcx
+        jmp .loop
+        
+        .notfound:
+            mov rax, 1 ; código da syscall 'write'
+            mov rdi, 1 ; descritor de arquivo para a saída padrão (stdout)
+            mov rsi, nfound ; endereço da variável result
+            mov rdx, 27 ; tamanho do resultado (27 bytes)
+            syscall ; chamar a syscall 'write'
+            
+            jmp .exit
+        
+        .found:
+            mov rax, 1 ; código da syscall 'write'
+            mov rdi, 1 ; descritor de arquivo para a saída padrão (stdout)
+            mov rsi, yfound ; endereço da variável result
+            mov rdx, 22 ; tamanho do resultado (22 bytes)
+            syscall ; chamar a syscall 'write'
+           
+            jmp .exit
+        
+        .exit:
+            ret
 
-        
-    .found:
-        
 global _start
-_start:         
+
+_start:
     mov rdi, array
-    call strlen
-    call div_rest
+    call search
     
     mov rax, 60        
     syscall
