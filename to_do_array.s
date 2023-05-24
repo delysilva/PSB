@@ -1,8 +1,8 @@
 section .data
 
-array db 2, 1, 5, 6, 7, 0
+array db 2, 5, 6, 7, 0
 
-var db 2
+var db 8
 
 nfound db "O valor não está no array", 10
 
@@ -15,7 +15,7 @@ search:
     mov rcx, 0 ; contador de elementos
     .loop:
         
-        cmp byte [rdi+rax], 4 ; compara com o valor procurado nesse caso valor = 4
+        cmp byte [rdi+rax], dl ; dl são os primeiros 8 bits do registrador rdx
         je .found
         cmp byte [rdi+rax], 0 ; verifica se chegou ao fim do array
         je .notfound
@@ -48,6 +48,7 @@ global _start
 
 _start:
     mov rdi, array
+    mov rdx, var
     call search
     
     mov rax, 60        
