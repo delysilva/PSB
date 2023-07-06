@@ -1,2 +1,2 @@
 # PSB
-Aulas práticas de Porgramação de Software Básico
+Aulas práticas de Programação de Software Básico
